@@ -7,7 +7,6 @@ export function useAuth() {
 
   useEffect(() => {
     let mounted = true;
-    setLoading(true);
 
     // Safety: never hang forever
     const timeout = setTimeout(() => {
