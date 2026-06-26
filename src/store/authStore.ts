@@ -10,7 +10,7 @@ type AuthState = {
 
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
-  loading: true,
+  loading: false,
   setUser: (user) => set({ user, loading: false }),
   setLoading: (loading) => set({ loading }),
 }));

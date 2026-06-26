@@ -6,8 +6,10 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Briefcase, FileCheck, Sparkles, Target, Search, Kanban, ArrowRight, Loader2 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Briefcase, FileCheck, Sparkles, Target, Search, Kanban, ArrowRight } from "lucide-react";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/_app/dashboard")({
   component: Dashboard,
@@ -16,10 +18,9 @@ export const Route = createFileRoute("/_app/dashboard")({
 function Dashboard() {
   const { user } = useAuth();
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  // Confirm mount
-  // eslint-disable-next-line no-console
-  console.log("[Dashboard] mounting", { userId: user?.id });
+  useEffect(() => {
+    console.log("[Dashboard] mounted", { userId: user?.id });
+  }, [user?.id]);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["dashboard", user?.id],
@@ -42,14 +43,6 @@ function Dashboard() {
       };
     },
   });
-
-  if (isLoading) {
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <Loader2 className="size-6 animate-spin text-primary" />
-      </div>
-    );
-  }
 
   if (error) {
     console.error("[Dashboard] query error", error);
@@ -87,10 +80,21 @@ function Dashboard() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard icon={Briefcase} label="Total Jobs Found" value={safe.latestJobs.length + safe.userJobs.length} />
-        <StatCard icon={FileCheck} label="Jobs Applied" value={applied} />
-        <StatCard icon={Target} label="Avg ATS Score" value={avgAts ? `${avgAts}%` : "—"} />
-        <StatCard icon={Sparkles} label="Profile Complete" value={`${completeness}%`} />
+        {isLoading ? (
+          <>
+            <StatSkeleton />
+            <StatSkeleton />
+            <StatSkeleton />
+            <StatSkeleton />
+          </>
+        ) : (
+          <>
+            <StatCard icon={Briefcase} label="Total Jobs Found" value={safe.latestJobs.length + safe.userJobs.length} />
+            <StatCard icon={FileCheck} label="Jobs Applied" value={applied} />
+            <StatCard icon={Target} label="Avg ATS Score" value={avgAts ? `${avgAts}%` : "—"} />
+            <StatCard icon={Sparkles} label="Profile Complete" value={`${completeness}%`} />
+          </>
+        )}
       </div>
 
       {/* Completeness */}
@@ -112,15 +116,19 @@ function Dashboard() {
         <Card className="glass p-5 lg:col-span-2">
           <h2 className="font-semibold mb-4">Application pipeline</h2>
           <div className="h-56">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chart}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.2} />
-                <XAxis dataKey="k" stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} allowDecimals={false} />
-                <Tooltip contentStyle={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 8 }} />
-                <Bar dataKey="v" fill="var(--primary)" radius={[6, 6, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+            {isLoading ? (
+              <Skeleton className="h-full w-full" />
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chart}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.2} />
+                  <XAxis dataKey="k" stroke="hsl(var(--muted-foreground))" fontSize={12} />
+                  <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} allowDecimals={false} />
+                  <Tooltip contentStyle={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 8 }} />
+                  <Bar dataKey="v" fill="var(--primary)" radius={[6, 6, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
           </div>
         </Card>
 
@@ -129,7 +137,13 @@ function Dashboard() {
             <h2 className="font-semibold">Today's new jobs</h2>
             <Link to="/jobs" className="text-xs text-primary">View all</Link>
           </div>
-          {safe.latestJobs.length === 0 ? (
+          {isLoading ? (
+            <div className="space-y-3">
+              <Skeleton className="h-12 w-full" />
+              <Skeleton className="h-12 w-full" />
+              <Skeleton className="h-12 w-full" />
+            </div>
+          ) : safe.latestJobs.length === 0 ? (
             <p className="text-sm text-muted-foreground">No jobs yet — run a search.</p>
           ) : (
             <ul className="space-y-3">
@@ -149,7 +163,13 @@ function Dashboard() {
           <h2 className="font-semibold">Recent tailored resumes</h2>
           <Link to="/history" className="text-xs text-primary">All history</Link>
         </div>
-        {safe.tailored.length === 0 ? (
+        {isLoading ? (
+          <div className="grid md:grid-cols-3 gap-3">
+            <Skeleton className="h-24 w-full" />
+            <Skeleton className="h-24 w-full" />
+            <Skeleton className="h-24 w-full" />
+          </div>
+        ) : safe.tailored.length === 0 ? (
           <div className="text-sm text-muted-foreground">Tailor your first resume to see it here.</div>
         ) : (
           <div className="grid md:grid-cols-3 gap-3">
@@ -168,6 +188,20 @@ function Dashboard() {
         )}
       </Card>
     </div>
+  );
+}
+
+function StatSkeleton() {
+  return (
+    <Card className="glass p-4">
+      <div className="flex items-center justify-between">
+        <div className="space-y-2">
+          <Skeleton className="h-3 w-24" />
+          <Skeleton className="h-8 w-16" />
+        </div>
+        <Skeleton className="size-10 rounded-lg" />
+      </div>
+    </Card>
   );
 }
 
