@@ -16,27 +16,34 @@ export const Route = createFileRoute("/_app/dashboard")({
 function Dashboard() {
   const { user } = useAuth();
 
-  const { data, isLoading } = useQuery({
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  // Confirm mount
+  // eslint-disable-next-line no-console
+  console.log("[Dashboard] mounting", { userId: user?.id });
+
+  const { data, isLoading, error } = useQuery({
     queryKey: ["dashboard", user?.id],
     enabled: !!user,
     queryFn: async () => {
       const uid = user!.id;
-      const [profile, jobs, userJobs, tailored] = await Promise.all([
+      const [profile, jobs, userJobs, tailored] = await Promise.allSettled([
         supabase.from("profiles").select("full_name, completeness_score").eq("id", uid).maybeSingle(),
         supabase.from("jobs").select("*").order("posted_at", { ascending: false }).limit(5),
         supabase.from("user_jobs").select("status, match_score").eq("user_id", uid),
         supabase.from("tailored_resumes").select("*").eq("user_id", uid).order("created_at", { ascending: false }).limit(3),
       ]);
+      const pick = <T,>(r: PromiseSettledResult<{ data: T | null }>): T | null =>
+        r.status === "fulfilled" ? (r.value.data ?? null) : null;
       return {
-        profile: profile.data,
-        latestJobs: jobs.data ?? [],
-        userJobs: userJobs.data ?? [],
-        tailored: tailored.data ?? [],
+        profile: pick(profile) as { full_name: string | null; completeness_score: number | null } | null,
+        latestJobs: (pick(jobs) as any[]) ?? [],
+        userJobs: (pick(userJobs) as any[]) ?? [],
+        tailored: (pick(tailored) as any[]) ?? [],
       };
     },
   });
 
-  if (isLoading || !data) {
+  if (isLoading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
         <Loader2 className="size-6 animate-spin text-primary" />
@@ -44,19 +51,24 @@ function Dashboard() {
     );
   }
 
-  const applied = data.userJobs.filter((j) => j.status === "applied" || j.status === "interview" || j.status === "offer").length;
-  const avgAts = data.tailored.length
-    ? Math.round(data.tailored.reduce((a, r) => a + (r.ats_score_after ?? 0), 0) / data.tailored.length)
+  if (error) {
+    console.error("[Dashboard] query error", error);
+  }
+
+  const safe = data ?? { profile: null, latestJobs: [], userJobs: [], tailored: [] };
+  const applied = safe.userJobs.filter((j: any) => j.status === "applied" || j.status === "interview" || j.status === "offer").length;
+  const avgAts = safe.tailored.length
+    ? Math.round(safe.tailored.reduce((a: number, r: any) => a + (r.ats_score_after ?? 0), 0) / safe.tailored.length)
     : 0;
-  const completeness = data.profile?.completeness_score ?? 0;
-  const firstName = (data.profile?.full_name ?? user?.email ?? "").split(" ")[0] || "there";
+  const completeness = safe.profile?.completeness_score ?? 0;
+  const firstName = (safe.profile?.full_name ?? user?.email ?? "").split(" ")[0] || "there";
 
   const chart = [
-    { k: "Saved", v: data.userJobs.filter((j) => j.status === "saved").length },
-    { k: "Applied", v: data.userJobs.filter((j) => j.status === "applied").length },
-    { k: "Interview", v: data.userJobs.filter((j) => j.status === "interview").length },
-    { k: "Offer", v: data.userJobs.filter((j) => j.status === "offer").length },
-    { k: "Rejected", v: data.userJobs.filter((j) => j.status === "rejected").length },
+    { k: "Saved", v: safe.userJobs.filter((j: any) => j.status === "saved").length },
+    { k: "Applied", v: safe.userJobs.filter((j: any) => j.status === "applied").length },
+    { k: "Interview", v: safe.userJobs.filter((j: any) => j.status === "interview").length },
+    { k: "Offer", v: safe.userJobs.filter((j: any) => j.status === "offer").length },
+    { k: "Rejected", v: safe.userJobs.filter((j: any) => j.status === "rejected").length },
   ];
 
   return (
@@ -75,7 +87,7 @@ function Dashboard() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard icon={Briefcase} label="Total Jobs Found" value={data.latestJobs.length + data.userJobs.length} />
+        <StatCard icon={Briefcase} label="Total Jobs Found" value={safe.latestJobs.length + safe.userJobs.length} />
         <StatCard icon={FileCheck} label="Jobs Applied" value={applied} />
         <StatCard icon={Target} label="Avg ATS Score" value={avgAts ? `${avgAts}%` : "—"} />
         <StatCard icon={Sparkles} label="Profile Complete" value={`${completeness}%`} />
@@ -117,11 +129,11 @@ function Dashboard() {
             <h2 className="font-semibold">Today's new jobs</h2>
             <Link to="/jobs" className="text-xs text-primary">View all</Link>
           </div>
-          {data.latestJobs.length === 0 ? (
+          {safe.latestJobs.length === 0 ? (
             <p className="text-sm text-muted-foreground">No jobs yet — run a search.</p>
           ) : (
             <ul className="space-y-3">
-              {data.latestJobs.map((j) => (
+              {safe.latestJobs.map((j: any) => (
                 <li key={j.id} className="rounded-lg p-3 hover:bg-white/5 transition">
                   <div className="font-medium text-sm">{j.title}</div>
                   <div className="text-xs text-muted-foreground">{j.company} · {j.location}</div>
@@ -137,11 +149,11 @@ function Dashboard() {
           <h2 className="font-semibold">Recent tailored resumes</h2>
           <Link to="/history" className="text-xs text-primary">All history</Link>
         </div>
-        {data.tailored.length === 0 ? (
+        {safe.tailored.length === 0 ? (
           <div className="text-sm text-muted-foreground">Tailor your first resume to see it here.</div>
         ) : (
           <div className="grid md:grid-cols-3 gap-3">
-            {data.tailored.map((t) => (
+            {safe.tailored.map((t: any) => (
               <div key={t.id} className="glass rounded-lg p-4">
                 <div className="font-medium text-sm">{t.job_title ?? "Untitled"}</div>
                 <div className="text-xs text-muted-foreground">{t.company ?? ""}</div>
