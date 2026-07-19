@@ -9,53 +9,43 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AppTailorRouteImport } from './routes/_app/tailor'
-import { Route as AppSettingsRouteImport } from './routes/_app/settings'
-import { Route as AppProfileRouteImport } from './routes/_app/profile'
-import { Route as AppHistoryRouteImport } from './routes/_app/history'
+import { Route as AppRouteImport } from './routes/_app'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
+import { Route as AppHistoryRouteImport } from './routes/_app/history'
+import { Route as AppProfileRouteImport } from './routes/_app/profile'
+import { Route as AppSettingsRouteImport } from './routes/_app/settings'
+import { Route as AppTailorRouteImport } from './routes/_app/tailor'
 import { Route as AppJobsIndexRouteImport } from './routes/_app/jobs/index'
-import { Route as AppProfileSkillsRouteImport } from './routes/_app/profile/skills'
-import { Route as AppProfileProjectsRouteImport } from './routes/_app/profile/projects'
-import { Route as AppProfilePersonalRouteImport } from './routes/_app/profile/personal'
-import { Route as AppProfileExperienceRouteImport } from './routes/_app/profile/experience'
-import { Route as AppProfileEducationRouteImport } from './routes/_app/profile/education'
-import { Route as AppProfileCertificationsRouteImport } from './routes/_app/profile/certifications'
-import { Route as AppProfileAchievementsRouteImport } from './routes/_app/profile/achievements'
-import { Route as AppJobsTrackerRouteImport } from './routes/_app/jobs/tracker'
-import { Route as AppJobsDatabaseRouteImport } from './routes/_app/jobs/database'
 import { Route as AppJobsIdRouteImport } from './routes/_app/jobs/$id'
+import { Route as AppJobsDatabaseRouteImport } from './routes/_app/jobs/database'
+import { Route as AppJobsTrackerRouteImport } from './routes/_app/jobs/tracker'
+import { Route as AppProfileAchievementsRouteImport } from './routes/_app/profile/achievements'
+import { Route as AppProfileCertificationsRouteImport } from './routes/_app/profile/certifications'
+import { Route as AppProfileEducationRouteImport } from './routes/_app/profile/education'
+import { Route as AppProfileExperienceRouteImport } from './routes/_app/profile/experience'
+import { Route as AppProfilePersonalRouteImport } from './routes/_app/profile/personal'
+import { Route as AppProfileProjectsRouteImport } from './routes/_app/profile/projects'
+import { Route as AppProfileSkillsRouteImport } from './routes/_app/profile/skills'
 
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppRoute = AppRouteImport.update({
   id: '/_app',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppTailorRoute = AppTailorRouteImport.update({
-  id: '/tailor',
-  path: '/tailor',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppSettingsRoute = AppSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppProfileRoute = AppProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => AppRoute,
 } as any)
 const AppHistoryRoute = AppHistoryRouteImport.update({
@@ -63,9 +53,19 @@ const AppHistoryRoute = AppHistoryRouteImport.update({
   path: '/history',
   getParentRoute: () => AppRoute,
 } as any)
-const AppDashboardRoute = AppDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
+const AppProfileRoute = AppProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTailorRoute = AppTailorRouteImport.update({
+  id: '/tailor',
+  path: '/tailor',
   getParentRoute: () => AppRoute,
 } as any)
 const AppJobsIndexRoute = AppJobsIndexRouteImport.update({
@@ -73,29 +73,24 @@ const AppJobsIndexRoute = AppJobsIndexRouteImport.update({
   path: '/jobs/',
   getParentRoute: () => AppRoute,
 } as any)
-const AppProfileSkillsRoute = AppProfileSkillsRouteImport.update({
-  id: '/skills',
-  path: '/skills',
-  getParentRoute: () => AppProfileRoute,
+const AppJobsIdRoute = AppJobsIdRouteImport.update({
+  id: '/jobs/$id',
+  path: '/jobs/$id',
+  getParentRoute: () => AppRoute,
 } as any)
-const AppProfileProjectsRoute = AppProfileProjectsRouteImport.update({
-  id: '/projects',
-  path: '/projects',
-  getParentRoute: () => AppProfileRoute,
+const AppJobsDatabaseRoute = AppJobsDatabaseRouteImport.update({
+  id: '/jobs/database',
+  path: '/jobs/database',
+  getParentRoute: () => AppRoute,
 } as any)
-const AppProfilePersonalRoute = AppProfilePersonalRouteImport.update({
-  id: '/personal',
-  path: '/personal',
-  getParentRoute: () => AppProfileRoute,
+const AppJobsTrackerRoute = AppJobsTrackerRouteImport.update({
+  id: '/jobs/tracker',
+  path: '/jobs/tracker',
+  getParentRoute: () => AppRoute,
 } as any)
-const AppProfileExperienceRoute = AppProfileExperienceRouteImport.update({
-  id: '/experience',
-  path: '/experience',
-  getParentRoute: () => AppProfileRoute,
-} as any)
-const AppProfileEducationRoute = AppProfileEducationRouteImport.update({
-  id: '/education',
-  path: '/education',
+const AppProfileAchievementsRoute = AppProfileAchievementsRouteImport.update({
+  id: '/achievements',
+  path: '/achievements',
   getParentRoute: () => AppProfileRoute,
 } as any)
 const AppProfileCertificationsRoute =
@@ -104,25 +99,30 @@ const AppProfileCertificationsRoute =
     path: '/certifications',
     getParentRoute: () => AppProfileRoute,
   } as any)
-const AppProfileAchievementsRoute = AppProfileAchievementsRouteImport.update({
-  id: '/achievements',
-  path: '/achievements',
+const AppProfileEducationRoute = AppProfileEducationRouteImport.update({
+  id: '/education',
+  path: '/education',
   getParentRoute: () => AppProfileRoute,
 } as any)
-const AppJobsTrackerRoute = AppJobsTrackerRouteImport.update({
-  id: '/jobs/tracker',
-  path: '/jobs/tracker',
-  getParentRoute: () => AppRoute,
+const AppProfileExperienceRoute = AppProfileExperienceRouteImport.update({
+  id: '/experience',
+  path: '/experience',
+  getParentRoute: () => AppProfileRoute,
 } as any)
-const AppJobsDatabaseRoute = AppJobsDatabaseRouteImport.update({
-  id: '/jobs/database',
-  path: '/jobs/database',
-  getParentRoute: () => AppRoute,
+const AppProfilePersonalRoute = AppProfilePersonalRouteImport.update({
+  id: '/personal',
+  path: '/personal',
+  getParentRoute: () => AppProfileRoute,
 } as any)
-const AppJobsIdRoute = AppJobsIdRouteImport.update({
-  id: '/jobs/$id',
-  path: '/jobs/$id',
-  getParentRoute: () => AppRoute,
+const AppProfileProjectsRoute = AppProfileProjectsRouteImport.update({
+  id: '/projects',
+  path: '/projects',
+  getParentRoute: () => AppProfileRoute,
+} as any)
+const AppProfileSkillsRoute = AppProfileSkillsRouteImport.update({
+  id: '/skills',
+  path: '/skills',
+  getParentRoute: () => AppProfileRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -259,11 +259,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app': {
@@ -273,32 +273,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_app/tailor': {
-      id: '/_app/tailor'
-      path: '/tailor'
-      fullPath: '/tailor'
-      preLoaderRoute: typeof AppTailorRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/settings': {
-      id: '/_app/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof AppSettingsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/profile': {
-      id: '/_app/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof AppProfileRouteImport
+    '/_app/dashboard': {
+      id: '/_app/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/history': {
@@ -308,11 +294,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppHistoryRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/dashboard': {
-      id: '/_app/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AppDashboardRouteImport
+    '/_app/profile': {
+      id: '/_app/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AppProfileRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/tailor': {
+      id: '/_app/tailor'
+      path: '/tailor'
+      fullPath: '/tailor'
+      preLoaderRoute: typeof AppTailorRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/jobs/': {
@@ -322,60 +322,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppJobsIndexRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/profile/skills': {
-      id: '/_app/profile/skills'
-      path: '/skills'
-      fullPath: '/profile/skills'
-      preLoaderRoute: typeof AppProfileSkillsRouteImport
-      parentRoute: typeof AppProfileRoute
-    }
-    '/_app/profile/projects': {
-      id: '/_app/profile/projects'
-      path: '/projects'
-      fullPath: '/profile/projects'
-      preLoaderRoute: typeof AppProfileProjectsRouteImport
-      parentRoute: typeof AppProfileRoute
-    }
-    '/_app/profile/personal': {
-      id: '/_app/profile/personal'
-      path: '/personal'
-      fullPath: '/profile/personal'
-      preLoaderRoute: typeof AppProfilePersonalRouteImport
-      parentRoute: typeof AppProfileRoute
-    }
-    '/_app/profile/experience': {
-      id: '/_app/profile/experience'
-      path: '/experience'
-      fullPath: '/profile/experience'
-      preLoaderRoute: typeof AppProfileExperienceRouteImport
-      parentRoute: typeof AppProfileRoute
-    }
-    '/_app/profile/education': {
-      id: '/_app/profile/education'
-      path: '/education'
-      fullPath: '/profile/education'
-      preLoaderRoute: typeof AppProfileEducationRouteImport
-      parentRoute: typeof AppProfileRoute
-    }
-    '/_app/profile/certifications': {
-      id: '/_app/profile/certifications'
-      path: '/certifications'
-      fullPath: '/profile/certifications'
-      preLoaderRoute: typeof AppProfileCertificationsRouteImport
-      parentRoute: typeof AppProfileRoute
-    }
-    '/_app/profile/achievements': {
-      id: '/_app/profile/achievements'
-      path: '/achievements'
-      fullPath: '/profile/achievements'
-      preLoaderRoute: typeof AppProfileAchievementsRouteImport
-      parentRoute: typeof AppProfileRoute
-    }
-    '/_app/jobs/tracker': {
-      id: '/_app/jobs/tracker'
-      path: '/jobs/tracker'
-      fullPath: '/jobs/tracker'
-      preLoaderRoute: typeof AppJobsTrackerRouteImport
+    '/_app/jobs/$id': {
+      id: '/_app/jobs/$id'
+      path: '/jobs/$id'
+      fullPath: '/jobs/$id'
+      preLoaderRoute: typeof AppJobsIdRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/jobs/database': {
@@ -385,12 +336,61 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppJobsDatabaseRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/jobs/$id': {
-      id: '/_app/jobs/$id'
-      path: '/jobs/$id'
-      fullPath: '/jobs/$id'
-      preLoaderRoute: typeof AppJobsIdRouteImport
+    '/_app/jobs/tracker': {
+      id: '/_app/jobs/tracker'
+      path: '/jobs/tracker'
+      fullPath: '/jobs/tracker'
+      preLoaderRoute: typeof AppJobsTrackerRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/_app/profile/achievements': {
+      id: '/_app/profile/achievements'
+      path: '/achievements'
+      fullPath: '/profile/achievements'
+      preLoaderRoute: typeof AppProfileAchievementsRouteImport
+      parentRoute: typeof AppProfileRoute
+    }
+    '/_app/profile/certifications': {
+      id: '/_app/profile/certifications'
+      path: '/certifications'
+      fullPath: '/profile/certifications'
+      preLoaderRoute: typeof AppProfileCertificationsRouteImport
+      parentRoute: typeof AppProfileRoute
+    }
+    '/_app/profile/education': {
+      id: '/_app/profile/education'
+      path: '/education'
+      fullPath: '/profile/education'
+      preLoaderRoute: typeof AppProfileEducationRouteImport
+      parentRoute: typeof AppProfileRoute
+    }
+    '/_app/profile/experience': {
+      id: '/_app/profile/experience'
+      path: '/experience'
+      fullPath: '/profile/experience'
+      preLoaderRoute: typeof AppProfileExperienceRouteImport
+      parentRoute: typeof AppProfileRoute
+    }
+    '/_app/profile/personal': {
+      id: '/_app/profile/personal'
+      path: '/personal'
+      fullPath: '/profile/personal'
+      preLoaderRoute: typeof AppProfilePersonalRouteImport
+      parentRoute: typeof AppProfileRoute
+    }
+    '/_app/profile/projects': {
+      id: '/_app/profile/projects'
+      path: '/projects'
+      fullPath: '/profile/projects'
+      preLoaderRoute: typeof AppProfileProjectsRouteImport
+      parentRoute: typeof AppProfileRoute
+    }
+    '/_app/profile/skills': {
+      id: '/_app/profile/skills'
+      path: '/skills'
+      fullPath: '/profile/skills'
+      preLoaderRoute: typeof AppProfileSkillsRouteImport
+      parentRoute: typeof AppProfileRoute
     }
   }
 }
